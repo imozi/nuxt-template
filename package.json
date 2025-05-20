@@ -1,0 +1,38 @@
+{
+  "name": "nuxt-app",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "nuxt build --dotenv .env.production",
+    "dev": "nuxt dev --host --dotenv .env.development",
+    "generate": "nuxt generate --dotenv .env.production",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
+  },
+  "dependencies": {
+    "@nuxt/eslint": "^1.4.0",
+    "@pinia/nuxt": "^0.11.0",
+    "@tailwindcss/vite": "^4.1.7",
+    "eslint": "^9.26.0",
+    "nuxt": "^3.17.3",
+    "pinia": "^3.0.2",
+    "pinia-plugin-persistedstate": "^4.3.0",
+    "tailwindcss": "^4.1.7",
+    "vue": "^3.5.13",
+    "vue-router": "^4.5.1"
+  },
+  "devDependencies": {
+    "@nuxtjs/stylelint-module": "^5.2.1",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "prettier-plugin-tailwindcss": "^0.6.11",
+    "sass-embedded": "^1.89.0",
+    "stylelint": "^16.19.1",
+    "stylelint-config-idiomatic-order": "^10.0.0",
+    "stylelint-config-recommended-vue": "^1.6.0",
+    "stylelint-config-standard": "^38.0.0",
+    "stylelint-config-standard-scss": "^15.0.0",
+    "stylelint-scss": "^6.12.0",
+    "tailwind-merge": "^3.3.0"
+  }
+}

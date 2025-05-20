@@ -1,0 +1,7 @@
+@import "tailwindcss";
+
+@utility z-index-* {
+  z-index: --value([integer]);
+  z-index: --value(integer);
+}
+
