@@ -1,5 +1,7 @@
+<script setup lang="ts"></script>
+
 <template>
-  <div class="asd">asdagg</div>
+  <div class="">about</div>
 </template>
 
 <style lang="scss">

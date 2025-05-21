@@ -13,8 +13,10 @@ const onChangeOpen = () => {
 </script>
 
 <template>
-  <Button ref="close" @click="onChangeOpen">
-    <slot>Close</slot>
+  <Button ref="close" class="absolute top-2 right-2 z-50" variant="icon" icon="sm" @click="onChangeOpen">
+    <slot>
+      <Icon name="solar:close-square-bold" class="size-full" />
+    </slot>
   </Button>
 </template>
 

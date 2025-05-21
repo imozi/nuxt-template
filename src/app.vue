@@ -1,8 +1,4 @@
-<script setup lang="ts">
-// import { useFetch } from "#app";
-// import { useFetch } from "#app";
-// const use = useFetch<Entity>("/api/user");
-</script>
+<script setup lang="ts"></script>
 
 <template>
   <NuxtLayout>

@@ -2,22 +2,23 @@
 
 <template>
   <DialogProvider>
-    <DialogTrigger>MOdal 1</DialogTrigger>
+    <DialogTrigger>Open</DialogTrigger>
     <DialogOverlay />
     <DialogPortal>
       <DialogRoot>
-        <DialogContent class="w-full max-w-[700px]">
+        <DialogContent class="w-full max-w-[500px]">
           <DialogHeader>
-            <Placeholder class="flex h-[120px]" />
+            <Placeholder class="h-14" />
           </DialogHeader>
           <Placeholder class="flex h-80" />
           <DialogFooter>
-            <Placeholder class="flex h-8" />
+            <Placeholder class="h-14" />
           </DialogFooter>
         </DialogContent>
       </DialogRoot>
     </DialogPortal>
   </DialogProvider>
+
   <div class="p-5">
     Lorem, ipsum dolor sit amet consectetur adipisicing elit. Itaque laudantium debitis ad consectetur illo. Ad, optio voluptas nulla omnis
     laborum iusto voluptatem placeat quasi molestiae obcaecati corrupti! Laudantium, excepturi atque. Suscipit dicta ducimus sequi nostrum

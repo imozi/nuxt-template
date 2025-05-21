@@ -12,7 +12,9 @@ const onChangeOpen = () => {
 
 <template>
   <Button ref="trigger" @click.prevent="onChangeOpen">
-    <slot> Open </slot>
+    <slot>
+      <span>Open</span>
+    </slot>
   </Button>
 </template>
 

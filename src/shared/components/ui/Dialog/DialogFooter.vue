@@ -1,7 +1,7 @@
 <script setup lang="ts"></script>
 
 <template>
-  <div class="flex items-center gap-5">
+  <div class="flex items-center">
     <slot />
   </div>
 </template>
