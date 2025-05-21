@@ -1,33 +1,34 @@
 <script setup lang="ts">
 import type { HTMLAttributes } from 'vue';
-import { DialogOpenKey, dialogStore } from '.';
+import { DialogOpenKey } from '.';
 
-interface DialogOverlayProps {
+interface PlaceholderProps {
   class?: HTMLAttributes['class'];
 }
 
 const open = useInject(DialogOpenKey);
-const props = defineProps<DialogOverlayProps>();
-const overlayRef = useTemplateRef('overlayRef');
-
-watch(overlayRef, () => {
-  if (!dialogStore.count) return;
-  if (!overlayRef.value) return;
-
-  const scrollWidth = window.innerWidth - overlayRef.value.clientWidth;
-
-  overlayRef.value.style.paddingLeft = `${scrollWidth}px`;
-});
+const props = defineProps<PlaceholderProps>();
 </script>
 
 <template>
-  <div
-    v-if="open"
-    ref="overlayRef"
-    :class="cn('fixed inset-0 top-0 left-0 flex items-center justify-center overflow-y-auto bg-black/80 p-5', props.class)"
-  >
-    <slot />
-  </div>
+  <Transition name="dialog-overlay">
+    <div v-if="open" :class="cn('fixed inset-0 z-50 bg-black/80', props.class)"></div>
+  </Transition>
 </template>
 
-<style lang="scss"></style>
+<style lang="scss">
+.dialog-overlay-enter-active,
+.dialog-overlay-leave-active {
+  transition: opacity 0.25s ease;
+}
+
+.dialog-overlay-enter-from,
+.dialog-overlay-leave-to {
+  opacity: 0;
+}
+
+.dialog-overlay-enter-to,
+.dialog-overlay-leave-from {
+  opacity: 1;
+}
+</style>

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { HTMLAttributes } from 'vue';
+import { useDialogLifecycle } from './composables/useDialogLifecycle';
 import { DialogOpenKey } from '.';
 
 interface DialogRootProps {
@@ -8,31 +9,24 @@ interface DialogRootProps {
 
 const open = useInject(DialogOpenKey);
 const props = defineProps<DialogRootProps>();
+const rootRef = useTemplateRef('rootRef');
 
-const onChangeOpen = (evt: MouseEvent) => {
+useDialogLifecycle(open, rootRef);
+
+const onMousedown = (evt: MouseEvent) => {
   if (evt.button !== 0 || !open.value) return;
   open.value = !open.value;
 };
 </script>
 
 <template>
-  <Teleport to="#teleport" defer>
-    <Transition name="dialog">
-      <div v-if="open" :class="cn('pointer-events-auto fixed inset-0 z-50 p-5', props.class)" @mousedown.stop="onChangeOpen">
-        <slot />
-      </div>
-    </Transition>
-  </Teleport>
+  <div
+    ref="rootRef"
+    :class="cn('pointer-events-auto fixed inset-0 z-50 flex items-center justify-center overflow-y-auto p-5', props.class)"
+    @mousedown.stop="onMousedown"
+  >
+    <slot />
+  </div>
 </template>
 
-<style lang="scss">
-.dialog-enter-active,
-.dialog-leave-active {
-  transition: opacity 0.3s ease;
-}
-
-.dialog-enter-from,
-.dialog-leave-to {
-  opacity: 0;
-}
-</style>
+<style lang="scss"></style>

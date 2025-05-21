@@ -7,13 +7,12 @@ const triggerRef = useTemplateRef('trigger');
 const onChangeOpen = () => {
   open.value = !open.value;
   triggerRef.value?.$el.blur();
-  console.log(open.value);
 };
 </script>
 
 <template>
   <Button ref="trigger" @click.prevent="onChangeOpen">
-    <slot />
+    <slot> Open </slot>
   </Button>
 </template>
 

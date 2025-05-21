@@ -1,10 +1,8 @@
 <script setup lang="ts">
-import { useDialogState } from '.';
+import { DialogOpenKey } from '.';
 
 const open = defineModel<boolean>('open', { default: false, required: false });
-
-const { action } = useDialogState();
-action.initState(open);
+provide(DialogOpenKey, open);
 </script>
 
 <template>

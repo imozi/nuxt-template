@@ -14,7 +14,7 @@ const onChangeOpen = () => {
 
 <template>
   <Button ref="close" @click="onChangeOpen">
-    <slot />
+    <slot>Close</slot>
   </Button>
 </template>
 
