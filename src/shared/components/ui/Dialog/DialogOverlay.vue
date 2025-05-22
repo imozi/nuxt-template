@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import type { HTMLAttributes } from 'vue';
-import { DialogOpenKey } from '.';
+import { useDialogContext } from '.';
 
 interface PlaceholderProps {
   class?: HTMLAttributes['class'];
 }
 
-const open = useInject(DialogOpenKey);
+const open = useDialogContext();
 const props = defineProps<PlaceholderProps>();
 </script>
 

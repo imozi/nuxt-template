@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { TeleportProps } from 'vue';
-import { DialogOpenKey } from '.';
+import { useDialogContext } from '.';
 
 interface DialogTeleportProps extends Omit<TeleportProps, 'to'> {
   to?: TeleportProps['to'];
@@ -8,7 +8,7 @@ interface DialogTeleportProps extends Omit<TeleportProps, 'to'> {
 
 const { to = '#teleport', ...props } = defineProps<DialogTeleportProps>();
 
-const open = useInject(DialogOpenKey);
+const open = useDialogContext();
 </script>
 
 <template>

@@ -1,17 +1,17 @@
 <script setup lang="ts">
 import type { HTMLAttributes } from 'vue';
 import { useDialogLifecycle } from './composables/useDialogLifecycle';
-import { DialogOpenKey } from '.';
+import { useDialogContext } from '.';
 
 interface DialogRootProps {
   class?: HTMLAttributes['class'];
 }
 
-const open = useInject(DialogOpenKey);
+const open = useDialogContext();
 const props = defineProps<DialogRootProps>();
 const rootRef = useTemplateRef('rootRef');
 
-useDialogLifecycle(open, rootRef);
+useDialogLifecycle(rootRef);
 
 const onMousedown = (evt: MouseEvent) => {
   if (evt.button !== 0 || !open.value) return;

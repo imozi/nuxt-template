@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { DialogOpenKey } from '.';
+import { provideDialogContext } from '.';
 
 const open = defineModel<boolean>('open', { default: false, required: false });
-provide(DialogOpenKey, open);
+provideDialogContext(open);
 </script>
 
 <template>

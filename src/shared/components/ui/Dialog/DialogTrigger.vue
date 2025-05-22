@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { DialogOpenKey } from '.';
+import { useDialogContext } from '.';
 
-const open = useInject(DialogOpenKey);
+const open = useDialogContext();
 const triggerRef = useTemplateRef('trigger');
 
 const onChangeOpen = () => {

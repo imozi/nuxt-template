@@ -1,7 +1,9 @@
+import { useDialogContext } from '..';
 import { useDialogStack } from './useDialogStack';
 
-export const useDialogLifecycle = (open: Ref<boolean>, rootRef: Ref<HTMLElement | null>) => {
+export const useDialogLifecycle = (rootRef: Ref<HTMLElement | null>) => {
   const { stack, actions, size } = useDialogStack();
+  const open = useDialogContext();
 
   const onKeydown = (evt: KeyboardEvent) => {
     if (evt.key === 'Escape' && open === stack.dialog.value.at(-1)) {
