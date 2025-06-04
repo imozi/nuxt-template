@@ -20,6 +20,8 @@
       </DialogRoot>
     </DialogPortal>
   </DialogProvider>
+
+  <Calendar />
 </template>
 
 <style lang="scss"></style>
