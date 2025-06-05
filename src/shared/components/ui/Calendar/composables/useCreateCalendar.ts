@@ -1,12 +1,17 @@
 import {
-  CalendarDate,
+  type CalendarDate,
   today as now,
   getLocalTimeZone,
   getDayOfWeek,
   getWeeksInMonth,
   startOfMonth,
-  DateFormatter,
+  isSameMonth,
+  isSameDay,
+  isWeekend,
+  isToday,
 } from '@internationalized/date';
+import { DEFAULT_LOCALE, BASE_YEAR, GAP_YEAR, WEEK_DAYS, MONTH } from '../constants';
+import { getBaseDate, getDateFromString, formatter, toNativeDate, isBefore, isDisabled, clampMonth, createCalendar } from '../utils';
 
 type PositionCell = 'prev' | 'current' | 'next';
 
@@ -28,60 +33,6 @@ interface CalendarCell {
   disabled: boolean;
   origin: CalendarDate;
 }
-
-const DEFAULT_LOCALE = 'ru-RU';
-const WEEK_DAYS = 7;
-const MONTH = 12;
-const GAP_YEAR = 12;
-const BASE_YEAR = 1900;
-
-const createCalendar = (era: string, year: number, month: number, day: number) => {
-  return new CalendarDate(era, year, month, day);
-};
-const formatter = (options: Intl.DateTimeFormatOptions, locale = DEFAULT_LOCALE) => {
-  return new DateFormatter(locale, options);
-};
-const toNativeDate = (date: CalendarDate) => new Date(date.toString());
-const isSameMonth = (a: CalendarDate, b: CalendarDate) => a.year === b.year && a.month === b.month;
-const isBefore = (a: CalendarDate, b: CalendarDate) => a.compare(b) < 0;
-const isAfter = (a: CalendarDate, b: CalendarDate) => a.compare(b) > 0;
-const isSameDay = (a: CalendarDate, b: CalendarDate) => a.compare(b) === 0;
-const isDisabled = (
-  day: CalendarDate,
-  today: CalendarDate,
-  min: CalendarDate,
-  max: CalendarDate,
-  disablePast?: boolean,
-  disableFuture?: boolean,
-) => {
-  if (disablePast && isBefore(day, today)) return true;
-  if (disableFuture && isAfter(day, today)) return true;
-  if (isBefore(day, min)) return true;
-  if (isAfter(day, max)) return true;
-  return false;
-};
-const getDateFromString = (date: string, era: string) => {
-  const [year, month, day] = date.split('-');
-  return createCalendar(era, Number(year), Number(month), Number(day));
-};
-
-const getBaseDate = (locale: string): CalendarDate => {
-  const sundayFirst = ['en-US'];
-  const mondayFirst = ['ru-RU'];
-
-  if (sundayFirst.includes(locale)) return new CalendarDate(1990, 1, 7);
-  if (mondayFirst.includes(locale)) return new CalendarDate(1990, 1, 1);
-
-  return new CalendarDate(1990, 1, 1);
-};
-
-const getWeekendsDays = (locale: string): number[] => {
-  const sundayFirst = ['en-US'];
-  const mondayFirst = ['ru-RU'];
-  if (sundayFirst.includes(locale)) return [0, 6];
-  if (mondayFirst.includes(locale)) return [5, 6];
-  return [0, 6];
-};
 
 export const useCreateCalendar = (options?: CalendarOptions) => {
   const today = now(getLocalTimeZone());
@@ -127,14 +78,14 @@ export const useCreateCalendar = (options?: CalendarOptions) => {
     return Array.from({ length: MONTH }, (_, i) => {
       const date = BASE_DATE.add({ months: i });
 
-      const isDisabledminDate = date.month < MIN_DATE.month && currentDate.value.year === MIN_DATE.year;
-      const isDisabledmaxDate = date.month > MAX_DATE.month && currentDate.value.year === MAX_DATE.year;
+      const isDisabledMinDate = date.month < MIN_DATE.month && currentDate.value.year === MIN_DATE.year;
+      const isDisabledMaxDate = date.month > MAX_DATE.month && currentDate.value.year === MAX_DATE.year;
 
       return {
         value: date.month,
         label: df.format(toNativeDate(date)),
         selected: currentMonth.value === date.month,
-        disabled: isDisabledminDate || isDisabledmaxDate,
+        disabled: isDisabledMinDate || isDisabledMaxDate,
       };
     });
   });
@@ -144,13 +95,13 @@ export const useCreateCalendar = (options?: CalendarOptions) => {
       const day = calendarStart.value.add({ days: i });
       const isCurrentMonth = isSameMonth(day, currentDate.value);
       const position = isCurrentMonth ? 'current' : isBefore(day, currentDate.value) ? 'prev' : 'next';
-      const weekend = getWeekendsDays(LOCALE).includes(getDayOfWeek(day, LOCALE));
+      const weekend = isWeekend(day, LOCALE);
 
       return {
         day: day.day,
         position,
         weekend,
-        today: isSameDay(today, day),
+        today: isToday(day, getLocalTimeZone()),
         selected: selected.value ? isSameDay(selected.value, day) : false,
         disabled: isDisabled(day, today, MIN_DATE, MAX_DATE, options?.disablePast, options?.disableFuture),
         origin: day,
@@ -259,17 +210,9 @@ export const useCreateCalendar = (options?: CalendarOptions) => {
       return;
     }
 
-    if (currentDate.value.month < MIN_DATE.month && year.value === MIN_DATE.year) {
-      currentDate.value = createCalendar(currentDate.value.era, year.value, MIN_DATE.month, 1);
-      return;
-    }
+    const clampedMonth = clampMonth(year.value, currentMonth.value, MIN_DATE, MAX_DATE);
 
-    if (currentDate.value.month > MAX_DATE.month && year.value === MAX_DATE.year) {
-      currentDate.value = createCalendar(currentDate.value.era, year.value, MAX_DATE.month, 1);
-      return;
-    }
-
-    currentDate.value = createCalendar(currentDate.value.era, year.value, currentDate.value.month, 1);
+    currentDate.value = createCalendar(currentDate.value.era, year.value, clampedMonth, 1);
   };
 
   const select = (date: CalendarCell) => {

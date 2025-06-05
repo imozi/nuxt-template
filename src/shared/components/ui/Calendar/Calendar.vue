@@ -4,7 +4,7 @@ import { useCreateCalendar } from './composables/useCreateCalendar';
 const { days, daysWeek, selected, months, actions, currentMonth, currentYear, years, isPrevMonth, isNextMonth, isPrevYear, isNextYear } =
   useCreateCalendar({
     locale: 'ru-RU',
-    minDate: '2025-05-01',
+    minDate: '2022-03-01',
     maxDate: '2025-06-31',
   });
 </script>
