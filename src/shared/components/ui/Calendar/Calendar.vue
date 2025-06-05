@@ -1,7 +1,12 @@
 <script setup lang="ts">
-import { useCalendar } from './composables/useCalendar';
+import { useCreateCalendar } from './composables/useCreateCalendar';
 
-const { days, daysWeek, selected, months, actions, currentMonth, currentYear, years, isPrev, isNext } = useCalendar();
+const { days, daysWeek, selected, months, actions, currentMonth, currentYear, years, isPrevMonth, isNextMonth, isPrevYear, isNextYear } =
+  useCreateCalendar({
+    locale: 'ru-RU',
+    minDate: '2025-05-01',
+    maxDate: '2025-06-31',
+  });
 </script>
 
 <template>
@@ -12,15 +17,19 @@ const { days, daysWeek, selected, months, actions, currentMonth, currentYear, ye
   </div>
   <div class="flex gap-5">
     <div v-for="month of months" :key="month.value">
-      <Button class="month" :class="{ 'bg-blue-400': month.selected }" @click="actions.setMonth(month)">{{ month.label }}</Button>
+      <Button class="month" :class="{ 'bg-blue-400': month.selected, 'bg-red-400': month.disabled }" @click="actions.setMonth(month)">
+        {{ month.label }}
+      </Button>
     </div>
   </div>
   <div class="calendar">
     <div class="my-5 font-medium">{{ selected ? selected : 'Дата не выбрана' }}</div>
     <div class="font-extrabold">{{ currentMonth }} {{ currentYear }}</div>
     <div class="my-5 flex gap-5">
-      <Button :disabled="!isPrev" :class="{ 'bg-red-500': !isPrev }" @click="actions.prevMonth">prev</Button>
-      <Button :disabled="!isNext" :class="{ 'bg-red-500': !isNext }" @click="actions.nextMonth">next</Button>
+      <Button :class="{ 'bg-red-500': !isPrevYear }" @click="actions.prevYear">prev year</Button>
+      <Button :class="{ 'bg-red-500': !isPrevMonth }" @click="actions.prevMonth">prev month</Button>
+      <Button :class="{ 'bg-red-500': !isNextMonth }" @click="actions.nextMonth">next month</Button>
+      <Button :class="{ 'bg-red-500': !isNextYear }" @click="actions.nextYear">prev year</Button>
     </div>
     <div class="grid grid-cols-7">
       <div v-for="day of daysWeek" :key="day" class="weekday">
