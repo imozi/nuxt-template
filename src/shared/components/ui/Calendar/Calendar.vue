@@ -1,12 +1,36 @@
 <script setup lang="ts">
 import { useCreateCalendar } from './composables/useCreateCalendar';
 
-const { days, daysWeek, selected, months, actions, currentMonth, currentYear, years, isPrevMonth, isNextMonth, isPrevYear, isNextYear } =
-  useCreateCalendar({
-    locale: 'ru-RU',
-    minDate: '2022-03-01',
-    maxDate: '2025-06-31',
-  });
+type CalendarProps = {
+  minDate?: string;
+  maxDate?: string;
+};
+
+const date = defineModel<string | null>('date', { default: null, required: false });
+const props = defineProps<CalendarProps>();
+
+const {
+  days,
+  daysWeek,
+  selected,
+  months,
+  actions,
+  currentMonth,
+  currentYear,
+  years,
+  isPrevMonth,
+  isNextMonth,
+  isPrevYear,
+  isNextYear,
+} = useCreateCalendar({
+  minDate: props.minDate,
+  maxDate: props.maxDate,
+  defaultValue: date.value,
+});
+
+watch(selected, () => {
+  date.value = selected.value?.toString() ?? null;
+});
 </script>
 
 <template>
@@ -17,7 +41,11 @@ const { days, daysWeek, selected, months, actions, currentMonth, currentYear, ye
   </div>
   <div class="flex gap-5">
     <div v-for="month of months" :key="month.value">
-      <Button class="month" :class="{ 'bg-blue-400': month.selected, 'bg-red-400': month.disabled }" @click="actions.setMonth(month)">
+      <Button
+        class="month"
+        :class="{ 'bg-blue-400': month.selected, 'bg-red-400': month.disabled }"
+        @click="actions.setMonth(month)"
+      >
         {{ month.label }}
       </Button>
     </div>
