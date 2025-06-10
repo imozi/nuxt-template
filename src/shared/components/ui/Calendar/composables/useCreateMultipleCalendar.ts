@@ -24,12 +24,11 @@ import {
 } from '../utils';
 
 type PositionCell = 'prev' | 'current' | 'next';
-type SelectionMode = 'single' | 'multiple' | 'range'; // TODO: add range & add multiple
-type CalendarValue = string | string[] | { from: CalendarDate | null; to: CalendarDate | null } | null;
+type defaultValue = string[];
 
 interface CalendarOptions {
   locale?: 'ru-RU' | 'en-US';
-  defaultValue?: CalendarValue;
+  defaultValues?: defaultValue;
   minDate?: string;
   maxDate?: string;
   disablePast?: boolean;
@@ -46,15 +45,7 @@ interface CalendarCell {
   origin: CalendarDate;
 }
 
-const checkState = (value: CalendarValue) => {
-  if (typeof value === 'string') {
-    return value;
-  }
-
-  return '';
-};
-
-export const useCreateCalendar = (options?: CalendarOptions) => {
+export const useCreateMultipleCalendar = (options?: CalendarOptions) => {
   const TODAY = now(getLocalTimeZone());
   const LOCALE = options?.locale ?? DEFAULT_LOCALE;
   const BASE_DATE = getBaseDate(LOCALE);
@@ -65,17 +56,18 @@ export const useCreateCalendar = (options?: CalendarOptions) => {
     ? getDateFromString(options.maxDate, TODAY.era)
     : createCalendar(TODAY.era, TODAY.year + GAP_YEAR, 12, 31);
 
-  const selected = shallowRef(
-    options?.defaultValue ? getDateFromString(checkState(options?.defaultValue), TODAY.era) : null,
+  const selected = shallowRef<CalendarDate[]>(
+    options?.defaultValues?.map((dateStr) => getDateFromString(dateStr, TODAY.era)) ?? [],
   );
 
   const currentDate = shallowRef(
-    options?.defaultValue
-      ? getDateFromString(checkState(options.defaultValue), TODAY.era)
-      : options?.maxDate
+    options?.defaultValues?.[0]
+      ? getDateFromString(options.defaultValues[0], TODAY.era)
+      : options?.maxDate && isBefore(MAX_DATE, TODAY)
         ? createCalendar(MAX_DATE.era, MAX_DATE.year, MAX_DATE.month, MAX_DATE.day)
         : createCalendar(TODAY.era, TODAY.year, TODAY.month, TODAY.day),
   );
+
   const start = computed(() => startOfMonth(currentDate.value));
   const offset = computed(() => getDayOfWeek(start.value, LOCALE));
   const weeks = computed(() => getWeeksInMonth(currentDate.value, LOCALE));
@@ -125,7 +117,7 @@ export const useCreateCalendar = (options?: CalendarOptions) => {
         position,
         weekend,
         today: isToday(day, getLocalTimeZone()),
-        selected: selected.value ? isSameDay(selected.value, day) : false,
+        selected: selected.value ? selected.value.some((s) => isSameDay(s, day)) : false,
         disabled: isDisabled(day, TODAY, MIN_DATE, MAX_DATE, options?.disablePast, options?.disableFuture),
         origin: day,
       };
@@ -243,12 +235,15 @@ export const useCreateCalendar = (options?: CalendarOptions) => {
       return;
     }
 
-    if (selected.value && isSameDay(selected.value, date.origin)) {
-      selected.value = null;
-      return;
-    }
+    const index = selected.value.findIndex((d) => isSameDay(d, date.origin));
 
-    selected.value = date.origin;
+    if (index !== -1) {
+      selected.value = [...selected.value.slice(0, index), ...selected.value.slice(index + 1)].sort((a, b) =>
+        a.compare(b),
+      );
+    } else {
+      selected.value = [...selected.value, date.origin].sort((a, b) => a.compare(b));
+    }
 
     if (date.position === 'prev') {
       prevMonth();

@@ -1,10 +1,12 @@
 <script setup lang="ts">
-const date = ref('2025-06-04');
+const single = ref('');
+const multiple = ref([]);
+const range = ref({ from: null, to: null });
 </script>
 
 <template>
   <DialogProvider>
-    <DialogTrigger>Open - {{ date }}</DialogTrigger>
+    <DialogTrigger />
     <DialogOverlay />
     <DialogPortal>
       <DialogRoot>
@@ -23,7 +25,9 @@ const date = ref('2025-06-04');
     </DialogPortal>
   </DialogProvider>
 
-  <Calendar v-model:date="date" min-date="2023-01-01" max-date="2027-12-31" />
+  <Calendar v-model:date="single" min-date="2024-01-01" max-date="2027-12-31" mode="single" />
+  <Calendar v-model:date="multiple" min-date="2024-01-01" max-date="2027-12-31" mode="multiple" />
+  <Calendar v-model:date="range" min-date="2024-01-01" max-date="2027-12-31" mode="range" />
 </template>
 
 <style lang="scss"></style>

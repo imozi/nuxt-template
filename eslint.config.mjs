@@ -9,6 +9,7 @@ export default createConfigForNuxt(
         quotes: 'single',
         quoteProps: 'consistent',
         braceStyle: '1tbs',
+        arrowParens: true,
       },
     },
   },
@@ -29,6 +30,7 @@ export default createConfigForNuxt(
       'vue/multi-word-component-names': 'off',
       '@typescript-eslint/no-empty-object-type': 'off',
       'vue/html-self-closing': 'off',
+      '@stylistic/operator-linebreak': 'off',
     },
   },
 );
