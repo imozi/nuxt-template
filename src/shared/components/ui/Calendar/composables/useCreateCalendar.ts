@@ -45,7 +45,7 @@ interface CalendarCell {
   origin: CalendarDate;
 }
 
-export const useCreateSingleCalendar = (options?: CalendarOptions) => {
+export const useCreateCalendar = (options?: CalendarOptions) => {
   const TODAY = now(getLocalTimeZone());
   const LOCALE = options?.locale ?? DEFAULT_LOCALE;
   const BASE_DATE = getBaseDate(LOCALE);

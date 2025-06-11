@@ -1,12 +1,15 @@
 <script setup lang="ts">
-import { useCreateSingleCalendar } from './composables/useCreateSingleCalendar';
+import { useCreateRangeCalendar } from './composables/useCreateRangeCalendar';
 
 type CalendarProps = {
   minDate?: string;
   maxDate?: string;
 };
 
-const date = defineModel<string>('date', { default: '', required: false });
+const date = defineModel<{ from: string | null; to: string | null }>('value', {
+  default: { from: null, to: null },
+  required: false,
+});
 const props = defineProps<CalendarProps>();
 
 const {
@@ -22,15 +25,19 @@ const {
   isNextMonth,
   isPrevYear,
   isNextYear,
-} = useCreateSingleCalendar({
+} = useCreateRangeCalendar({
   minDate: props.minDate,
   maxDate: props.maxDate,
   defaultValue: date.value,
 });
 
-watch(selected, () => {
-  date.value = selected.value?.toString() ?? '';
-});
+watch(
+  () => selected.value.to,
+  () => {
+    date.value.from = (selected.value.from && selected.value.from.toString()) || null;
+    date.value.to = (selected.value.to && selected.value.to.toString()) || null;
+  },
+);
 </script>
 
 <template>
@@ -52,8 +59,9 @@ watch(selected, () => {
       </div>
     </div>
     <div class="calendar">
-      <div class="my-5 font-medium">{{ selected ? selected : 'Дата не выбрана' }}</div>
-      <!-- <div class="my-5 font-medium">{{ selected.length ? selected.join(',') : 'Дата не выбрана' }}</div> -->
+      <div class="my-5 font-medium">
+        {{ selected.from ? `${selected.from} - ${selected.to}` : 'Дата не выбрана' }}
+      </div>
       <div class="font-extrabold">{{ currentMonth }} {{ currentYear }}</div>
       <div class="my-5 flex gap-5">
         <Button :class="{ 'bg-red-500': !isPrevYear }" @click="actions.prevYear">prev year</Button>
@@ -75,7 +83,8 @@ watch(selected, () => {
             'text-black': item.position === 'current',
             'text-red-500': item.weekend,
             'bg-purple-100': item.today,
-            'bg-purple-600': item.selected,
+            'bg-purple-600': item.isStart || item.isEnd,
+            'bg-purple-200': item.inRange,
             'text-slate-200': item.disabled,
           }"
           @click="actions.select(item)"
