@@ -1,5 +1,4 @@
 import {
-  type CalendarDate,
   today as now,
   getLocalTimeZone,
   getDayOfWeek,
@@ -22,28 +21,7 @@ import {
   clampMonth,
   createCalendar,
 } from '../utils';
-
-type PositionCell = 'prev' | 'current' | 'next';
-type defaultValue = string;
-
-interface CalendarOptions {
-  locale?: 'ru-RU' | 'en-US';
-  defaultValue?: defaultValue;
-  minDate?: string;
-  maxDate?: string;
-  disablePast?: boolean;
-  disableFuture?: boolean;
-}
-
-interface CalendarCell {
-  day: number;
-  position: PositionCell;
-  weekend: boolean;
-  today: boolean;
-  selected: boolean;
-  disabled: boolean;
-  origin: CalendarDate;
-}
+import type { CalendarOptions, CalendarCell } from '../types';
 
 export const useCreateCalendar = (options?: CalendarOptions) => {
   const TODAY = now(getLocalTimeZone());

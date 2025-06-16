@@ -12,15 +12,21 @@
     ],
     "at-rule-no-deprecated": [
       true,
-      { "ignoreAtRules": ["tailwind", "apply", "variants", "responsive", "screen", "custom-variant", "theme", "utility"] }
+      {
+        "ignoreAtRules": ["tailwind", "apply", "variant", "responsive", "screen", "custom-variant", "theme", "utility"]
+      }
     ],
     "at-rule-no-unknown": [
       true,
-      { "ignoreAtRules": ["tailwind", "apply", "variants", "responsive", "screen", "custom-variant", "theme", "utility"] }
+      {
+        "ignoreAtRules": ["tailwind", "apply", "variant", "responsive", "screen", "custom-variant", "theme", "utility"]
+      }
     ],
     "scss/at-rule-no-unknown": [
       true,
-      { "ignoreAtRules": ["tailwind", "apply", "variants", "responsive", "screen", "custom-variant", "theme", "utility"] }
+      {
+        "ignoreAtRules": ["tailwind", "apply", "variant", "responsive", "screen", "custom-variant", "theme", "utility"]
+      }
     ],
     "no-empty-source": null
   }
